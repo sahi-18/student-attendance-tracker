@@ -8,35 +8,22 @@
   </style>
 </head>
 <body>
-
-
 <h2>Student Attendance Tracker</h2>
-
-
 <div id="students"></div>
-
-
 <button onclick="dispatch({type:'RESET'})">Reset</button>
-
-
 <h3>Final Attendance</h3>
 <table id="attendanceTable">
   <tr>
     <th>ID</th> <th>Name</th> <th>Status</th>
   </tr>
 </table>
-
-
 <script>
-  // ---------- Initial State ----------
+ 
   let students = [
     { id: 1, name: "John", status: "" },
     { id: 2, name: "Sahithi", status: "" },
     { id: 3, name: "Aarav", status: "" }
   ];
-
-
-  // ---------- Reducer (works like useReducer) ----------
   function attendanceReducer(state, action) {
     switch(action.type) {
       case "MARK_PRESENT":
@@ -56,17 +43,13 @@
     }
   }
 
-
-  // ---------- Dispatch ----------
   function dispatch(action) {
     students = attendanceReducer(students, action);
     render();
   }
 
 
-  // ---------- UI Rendering ----------
   function render() {
-    // Student buttons
     document.getElementById("students").innerHTML =
       students.map(s => `
         <p>
@@ -75,9 +58,6 @@
           <button onclick="dispatch({type:'MARK_ABSENT', id:${s.id}})">Absent</button>
         </p>
       `).join("");
-
-
-    // Attendance table
     document.getElementById("attendanceTable").innerHTML =
       `<tr>
         <th>ID</th><th>Name</th><th>Status</th>
@@ -90,11 +70,7 @@
         </tr>
       `).join("");
   }
-
-
   render();
 </script>
-
-
 </body>
 </html>
