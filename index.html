@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Attendance Tracker</title>
+  <style>
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }
+    button { margin: 3px; padding: 5px 10px; }
+  </style>
+</head>
+<body>
+
+
+<h2>Student Attendance Tracker</h2>
+
+
+<div id="students"></div>
+
+
+<button onclick="dispatch({type:'RESET'})">Reset</button>
+
+
+<h3>Final Attendance</h3>
+<table id="attendanceTable">
+  <tr>
+    <th>ID</th> <th>Name</th> <th>Status</th>
+  </tr>
+</table>
+
+
+<script>
+  // ---------- Initial State ----------
+  let students = [
+    { id: 1, name: "John", status: "" },
+    { id: 2, name: "Sahithi", status: "" },
+    { id: 3, name: "Aarav", status: "" }
+  ];
+
+
+  // ---------- Reducer (works like useReducer) ----------
+  function attendanceReducer(state, action) {
+    switch(action.type) {
+      case "MARK_PRESENT":
+        return state.map(s => s.id === action.id ? {...s, status: "Present"} : s);
+
+
+      case "MARK_ABSENT":
+        return state.map(s => s.id === action.id ? {...s, status: "Absent"} : s);
+
+
+      case "RESET":
+        return state.map(s => ({...s, status: ""}));
+
+
+      default:
+        return state;
+    }
+  }
+
+
+  // ---------- Dispatch ----------
+  function dispatch(action) {
+    students = attendanceReducer(students, action);
+    render();
+  }
+
+
+  // ---------- UI Rendering ----------
+  function render() {
+    // Student buttons
+    document.getElementById("students").innerHTML =
+      students.map(s => `
+        <p>
+          ${s.name}
+          <button onclick="dispatch({type:'MARK_PRESENT', id:${s.id}})">Present</button>
+          <button onclick="dispatch({type:'MARK_ABSENT', id:${s.id}})">Absent</button>
+        </p>
+      `).join("");
+
+
+    // Attendance table
+    document.getElementById("attendanceTable").innerHTML =
+      `<tr>
+        <th>ID</th><th>Name</th><th>Status</th>
+      </tr>` +
+      students.map(s => `
+        <tr>
+          <td>${s.id}</td>
+          <td>${s.name}</td>
+          <td>${s.status || "-"}</td>
+        </tr>
+      `).join("");
+  }
+
+
+  render();
+</script>
+
+
+</body>
+</html>
